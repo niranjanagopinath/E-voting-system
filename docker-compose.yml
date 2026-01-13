@@ -1,0 +1,125 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: evoting_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-evoting}
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secure_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-admin}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - evoting_network
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: evoting_backend
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-evoting}
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secure_password}
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      SECRET_KEY: ${SECRET_KEY:-dev_secret_key_change_in_production}
+      KEY_SIZE: 2048
+      THRESHOLD: 3
+      TOTAL_TRUSTEES: 5
+      BLOCKCHAIN_RPC: ${BLOCKCHAIN_RPC:-http://ganache:8545}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - backend_cache:/root/.cache
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - evoting_network
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: evoting_frontend
+    environment:
+      REACT_APP_API_URL: http://localhost:8000/api
+      REACT_APP_WS_URL: ws://localhost:8000/ws
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - evoting_network
+    stdin_open: true
+    tty: true
+
+  # Ganache - Local Ethereum Blockchain
+  ganache:
+    image: trufflesuite/ganache:latest
+    container_name: evoting_ganache
+    ports:
+      - "8545:8545"
+    command:
+      - --deterministic
+      - --accounts=10
+      - --networkId=1337
+      - --chainId=1337
+      - --mnemonic="test test test test test test test test test test test junk"
+    networks:
+      - evoting_network
+
+  # PGAdmin - Database Management (Optional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: evoting_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@evoting.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - evoting_network
+    profiles:
+      - tools
+
+volumes:
+  postgres_data:
+    driver: local
+  backend_cache:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  evoting_network:
+    driver: bridge

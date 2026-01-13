@@ -1,0 +1,152 @@
+/* App.css - Main Application Styles */
+
+.App {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.App-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.App-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.App-header p {
+  margin: 0.25rem 0;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+.system-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.8rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.status-healthy {
+  color: #28a745;
+  font-weight: 600;
+  text-shadow: 0 0 8px rgba(40, 167, 69, 0.6);
+}
+
+.status-offline {
+  color: #dc3545;
+  font-weight: 600;
+  text-shadow: 0 0 8px rgba(220, 53, 69, 0.6);
+}
+
+/* Navigation */
+.App-nav {
+  background: white;
+  border-bottom: 2px solid #e9ecef;
+  padding: 0;
+  display: flex;
+  gap: 0;
+}
+
+.App-nav button {
+  padding: 1rem 2rem;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6c757d;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.App-nav button:hover {
+  color: #495057;
+  background: #f8f9fa;
+}
+
+.App-nav button.active {
+  color: #667eea;
+  border-bottom-color: #667eea;
+  background: white;
+}
+
+/* Main Content */
+.App-main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Footer */
+.App-footer {
+  background: #212529;
+  color: #adb5bd;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  border-top: 2px solid #343a40;
+}
+
+.App-footer p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+/* Loading States */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: #6c757d;
+}
+
+.spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 1rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .nav-tab {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .app-content {
+    padding: 1rem;
+  }
+}
