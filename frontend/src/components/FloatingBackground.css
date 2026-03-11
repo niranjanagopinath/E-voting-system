@@ -1,0 +1,72 @@
+.floating-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background-color: #f7f2e8;
+}
+
+.mesh-gradient {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(at 0% 0%, rgba(15, 118, 110, 0.08) 0, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(15, 118, 110, 0.05) 0, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(15, 118, 110, 0.08) 0, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(15, 118, 110, 0.05) 0, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(247, 242, 232, 0.2) 0, transparent 50%);
+    filter: blur(80px);
+    animation: mesh-move 20s ease infinite alternate;
+}
+
+@keyframes mesh-move {
+    0% {
+        transform: scale(1) translate(0, 0);
+    }
+
+    100% {
+        transform: scale(1.1) translate(20px, 10px);
+    }
+}
+
+.floating-icons-container {
+    width: 100%;
+    height: 100%;
+}
+
+.floating-icon {
+    position: absolute;
+    pointer-events: none;
+    animation: float-around linear infinite;
+    opacity: 0.6;
+}
+
+@keyframes float-around {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    33% {
+        transform: translate(100px, 100px) rotate(120deg);
+    }
+
+    66% {
+        transform: translate(-50px, 150px) rotate(240deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+}
+
+.floating-background::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, rgba(247, 242, 232, 0.4) 100%);
+    pointer-events: none;
+}
