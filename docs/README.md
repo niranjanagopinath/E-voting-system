@@ -1,6 +1,6 @@
 # E-Voting System
 
-A privacy-preserving electronic voting platform that uses homomorphic encryption to tally votes without decrypting individual ballots, threshold cryptography so no single party can access results alone, and an immutable hash-chained ledger for auditability.
+A privacy-preserving electronic voting platform that uses homomorphic encryption to tally votes without decrypting individual ballots, threshold cryptography so no single party can access results alone, and an immutable hash-chained ledger for auditability
 
 ---
 
